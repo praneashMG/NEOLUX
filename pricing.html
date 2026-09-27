@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/fav.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NEOLUX</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (performance/vintage-modern) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #8B5CF6;
+            --accent-text: #7C3AED;
+            --accent-dark: #7C3AED;
+            --primary: #1E4A6B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #F3E8FF;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8B5CF6;
+            --accent-text: #A78BFA;
+            --accent-dark: #7C3AED;
+            --primary: #2563EB;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #2E1065;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        .text-accent {
+            color: var(--accent-text);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent-text);
+        }
+
+        .hover\:bg-accent\/10:hover {
+            background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-border {
+            border-color: var(--border-light);
+        }
+
+        /* Navbar + glassmorphic */
+        #main-header nav {
+            background: var(--card-bg);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme='dark'] #main-header nav {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.2s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown style */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            min-width: 190px;
+            padding: 0.4rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-wrapper.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        /* Tire comparison cards */
+        .tire-card {
+            transition: all 0.2s;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .tire-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary { white-space: nowrap;
+            background: var(--accent);
+            color: white;
+            border-radius: 9999px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-outline { white-space: nowrap;
+            border: 1.5px solid var(--accent-text);
+            color: var(--accent-text);
+            border-radius: 9999px;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .rating-star {
+            color: var(--rating-star);
+        }
+
+                .status-badge {
+            background: var(--accent);
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .vehicle-track {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button:focus,
+        .dropdown-toggle:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .dropdown-toggle {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+        }
+
+        @media (max-width: 1279px) {
+            .dropdown-menu {
+                position: static;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-wrapper.open .dropdown-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile Drawer Link Hover & Active Underlines */
+        #mobile-drawer nav a:not(.rounded-full) {
+            position: relative;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full) {
+            color: var(--accent-text) !important;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.2s ease;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full):hover::after {
+            width: 100%;
+        }
+
+        /* RTL support for navigation spacing, underlines and menus */
+        html[dir="rtl"] #main-header .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            margin-right: 2rem !important;
+            margin-left: 0 !important;
+        }
+        html[dir="rtl"] .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] .dropdown-menu a:hover {
+            transform: translateX(-4px);
+        }
+        html[dir="rtl"] .hover\:translate-x-1:hover {
+            transform: translateX(-0.25rem) !important;
+        }
+        html[dir="rtl"] .nav-link::after {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] #mobile-drawer nav a:not(.rounded-full)::after {
+            left: auto;
+            right: 0;
+        }
+    </style>
+    <style id="typography-alignment">
+        /* Typography Alignment & Consistency Overrides */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500 !important;
+        }
+        /* Keep paragraph weights 400-500 */
+        p:not(.font-medium), div.text-secondary {
+            font-weight: 400 !important;
+        }
+        /* Ensure proper text alignment inside cards */
+        .tire-card, .bg-card, .card {
+            text-align: left !important;
+        }
+        .text-center .tire-card, .text-center .bg-card {
+            text-align: left !important;
+        }
+        /* Reduce overly wide paragraphs inside containers for readability */
+        .container p, section > div > p.text-secondary {
+            max-width: 65ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tire-card p, .bg-card p, .card p, .text-left p {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            max-width: none !important;
+        }
+    </style>
+    <style id="cta-improvements">
+        /* Primary CTA Highlights */
+        .btn-primary { white-space: nowrap;
+            box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.4);
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+        html[data-theme='dark'] .btn-primary { white-space: nowrap;
+            box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.3);
+            color: #ffffff !important; /* High contrast in dark mode */
+            font-weight: 600 !important;
+        }
+        
+        /* Hover Color Consistency & Contrast */
+        .btn-primary:hover {
+            background-color: var(--accent-dark) !important;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px 0 rgba(139, 92, 246, 0.5);
+        }
+        html[data-theme='dark'] .btn-primary:hover {
+            box-shadow: 0 6px 16px 0 rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-outline { white-space: nowrap;
+            color: var(--accent-text) !important;
+            border-color: var(--accent-text) !important;
+        }
+        .btn-outline:hover {
+            background-color: var(--accent) !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+        html[data-theme='dark'] .btn-outline:hover {
+            color: #ffffff !important; /* High contrast in dark mode */
+        }
+
+        /* Align CTA buttons consistently inside cards/grids */
+        .tire-card, .dashboard-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1.25rem;
+        }
+        .tire-card > div:last-child, .dashboard-card > div:last-child, .dashboard-card > button:last-child {
+            margin-top: auto;
+        }
+    </style>
+    <style id="image-improvements">
+        /* Prevent image distortion globally */
+        img:not([src*="fav.png"]):not(.object-contain) {
+            object-fit: cover !important;
+        }
+        
+        /* Ensure proper background overlays for readability (apply to containers if needed) */
+        .bg-overlay {
+            position: relative;
+        }
+        .bg-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bg-overlay > *:not(img) {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+    <style id="responsive-fixes">
+        /* Guarantee text wrapping on small screens */
+        body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            -ms-word-break: break-all;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 pt-3" id="main-header">
+        <nav
+            class="max-w-7xl mx-auto px-5 py-3 rounded-2xl flex items-center justify-between backdrop-blur-sm border border-border">
+            <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+            <!-- Desktop Center Nav -->
+            <div class="hidden xl:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium">
+                <div class="dropdown-wrapper">
+                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1">
+                        <span>Home</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a>
+                        <a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                                <a href="products.html" class="nav-link">Products</a>
+                <a href="design.html" class="nav-link">Design Process</a>
+                <a href="pricing.html" class="nav-link">Pricing Guide</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="hidden xl:flex items-center gap-4">
+                <a href="contact.html" class="btn-primary px-6 py-2 text-sm font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="lang-icon" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-exchange-alt"></i></button>
+            </div>
+            <div class="xl:hidden flex items-center gap-3">
+                <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="drawer-toggle" class="p-2 text-accent"><i class="fas fa-bars text-2xl"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-[100] pointer-events-none">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition pointer-events-none"></div>
+        <div id="drawer-panel" class="absolute top-0 left-0 w-80 h-full bg-card shadow-2xl transform -translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-border pb-4"><a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;; color: var(--accent-text) !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a><button id="drawer-close"><i class="fas fa-times text-xl"></i></button></div>
+            <nav class="flex flex-col gap-3 mt-6">
+                <div>
+                    <button id="mobile-home-toggle" class="flex w-full justify-between items-center py-2 font-medium text-accent">Home <i class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-home-submenu" class="pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a><a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="products.html" class="py-2 font-medium">Products</a>
+                <a href="design.html" class="py-2 font-medium">Design Process</a>
+                <a href="pricing.html" class="py-2 font-medium">Pricing Guide</a>
+                <a href="about.html" class="py-2 font-medium">About</a>
+                <a href="contact.html" class="py-2 font-medium">Contact</a>
+                <div class="pt-4 border-t border-border flex gap-3 mt-4">                    <a href="contact.html" class="flex-1 text-center bg-accent rounded-full py-2 text-white font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
+                </div>
+                <div class="flex justify-around mt-6 pt-2"><button id="mobile-theme-btn" class="p-2"><i
+                            class="fas fa-moon"></i> Theme</button><button id="mobile-rtl-btn" class="p-2"><i
+                            class="fas fa-exchange-alt"></i> RTL</button></div>
+            </nav>
+        </div>
+    </div>
+
+    <main>
+
+  <!-- ============================================================
+       SECTION 1 — HERO (centered, gradient background + stat badges)
+       ============================================================ -->
+    <section class="min-h-screen flex flex-col justify-center relative w-full py-24 md:py-32 flex items-center justify-center overflow-hidden border-b border-border">
+    
+      <div class="absolute inset-0">
+        <img src="assets/ff.jpg" alt="Neon Sign Background" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/70"></div>
+      </div>
+
+    
+    <div class="relative z-10 px-6 text-center max-w-4xl mx-auto">
+      <span class="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.25em] uppercase text-accent mb-6 px-4 py-2 rounded-full border border-accent/30 bg-accent/5 backdrop-blur-md">
+        <i class="fas fa-tag"></i> Pricing Guide
+      </span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] text-white" style="font-weight: 500 !important;">
+        Honest Pricing,<br>
+        <span class="text-accent">Zero Surprises</span>
+      </h1>
+      <p class="mt-6 text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-gray-200">
+        Every sign is quoted individually but here's a transparent breakdown to help you plan your custom neon or LED signage investment.
+      </p>
+
+      <div class="flex flex-wrap gap-3 justify-center mt-10">
+        <a href="contact.html" class="btn-primary px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="fas fa-calculator"></i> Get Custom Quote
+        </a>
+        <a href="#tiers" class="btn-outline px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="fas fa-arrow-down"></i> See Price Tiers
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — PRICE TIERS (3-card pricing grid, centered heading)
+       ============================================================ -->
+  <section id="tiers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+      <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Choose Your Tier</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+        Transparent Price Tiers
+      </h2>
+      <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Starting prices by project scope. Every tier includes free design mockup, professional materials, and warranty.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+
+      <!-- Starter -->
+      <div class="rounded-3xl border border-border bg-card p-7 md:p-8 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-11 h-11 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <p class="text-xs font-bold tracking-widest uppercase text-accent">Starter</p>
+        </div>
+        <div class="flex items-end gap-1">
+          <span class="text-4xl md:text-5xl font-bold" style="font-weight: 500 !important;">$299</span>
+          <span class="text-secondary text-sm mb-2">+</span>
+        </div>
+        <p class="text-secondary text-sm mt-3 leading-relaxed">Perfect for small window signs and single-color neon pieces.</p>
+
+        <ul class="mt-7 space-y-3 text-sm text-secondary flex-1">
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Up to 24" wide sign</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Single-color LED neon</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Clear acrylic backing</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Plug-in power supply</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Free digital mockup</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> 2-year warranty</li>
+        </ul>
+
+        <a href="contact.html" class="btn-outline mt-auto w-full px-5 py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+          <i class="fas fa-paper-plane"></i> Get Started
+        </a>
+      </div>
+
+      <!-- Professional (highlighted) -->
+      <div class="rounded-3xl border-2 border-accent bg-accent/5 p-7 md:p-8 flex flex-col relative overflow-hidden md:-mt-4 md:mb-4 shadow-2xl">
+        <div class="absolute -right-12 -top-12 w-44 h-44 bg-accent/25 rounded-full blur-3xl"></div>
+        <div class="absolute -left-12 -bottom-12 w-44 h-44 bg-accent/15 rounded-full blur-3xl"></div>
+
+        <div class="relative z-10">
+          <span class="status-badge w-fit">Most Popular</span>
+          <div class="flex items-center gap-3 mt-4 mb-4">
+            <div class="w-11 h-11 rounded-2xl bg-accent text-white flex items-center justify-center">
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="text-xs font-bold tracking-widest uppercase text-accent">Professional</p>
+          </div>
+          <div class="flex items-end gap-1">
+            <span class="text-5xl md:text-6xl font-bold" style="font-weight: 500 !important;">$899</span>
+            <span class="text-secondary text-sm mb-2">+</span>
+          </div>
+          <p class="text-secondary text-sm mt-3 leading-relaxed">Ideal for storefront neon, window displays, and mid-size channel letters.</p>
+
+          <ul class="mt-7 space-y-3 text-sm text-secondary flex-1">
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Up to 4 ft wide sign</li>
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Multi-color / RGB option</li>
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Dimmable remote included</li>
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Professional install available</li>
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Priority 2-week turnaround</li>
+            <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> 3-year warranty</li>
+          </ul>
+
+          <a href="contact.html" class="btn-primary mt-auto w-full px-5 py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+            <i class="fas fa-paper-plane"></i> Request Quote
+          </a>
+        </div>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="rounded-3xl border border-border bg-card p-7 md:p-8 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-11 h-11 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
+            <i class="fas fa-building"></i>
+          </div>
+          <p class="text-xs font-bold tracking-widest uppercase text-accent">Enterprise</p>
+        </div>
+        <div class="flex items-end gap-1">
+          <span class="text-4xl md:text-5xl font-bold" style="font-weight: 500 !important;">Custom</span>
+        </div>
+        <p class="text-secondary text-sm mt-3 leading-relaxed">For facade signage, multi-location rollouts, and full custom builds.</p>
+
+        <ul class="mt-7 space-y-3 text-sm text-secondary flex-1">
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Any size / any format</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Dedicated project manager</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Permit & engineering docs</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Nationwide installation</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> Volume discounts available</li>
+          <li class="flex items-start gap-2.5"><i class="fas fa-check text-accent text-xs mt-1"></i> 5-year warranty</li>
+        </ul>
+
+        <a href="contact.html" class="btn-outline mt-auto w-full px-5 py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+          <i class="fas fa-headset"></i> Book a Call
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3 — PRICE BY PRODUCT (table-style layout, centered heading)
+       ============================================================ -->
+  <section class="bg-card border-y border-border py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">By Product Type</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+          Starting Prices by Signage
+        </h2>
+        <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          Average starting prices based on typical scope. Final pricing depends on size, complexity, and installation.
+        </p>
+      </div>
+
+      <!-- Desktop table -->
+      <div class="hidden md:block overflow-hidden rounded-3xl border border-border bg-body">
+        <table class="w-full text-left">
+          <thead class="bg-accent/5 border-b border-border">
+            <tr>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-accent">Product Type</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-accent">Typical Size</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-accent">Starting Price</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-accent">Lead Time</th>
+              <th class="px-6 py-4"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border-light)]">
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-sign-hanging"></i></div>
+                  <span class="font-semibold text-sm">Custom Neon Sign</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">Up to 24" wide</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">$299</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">2–3 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-font"></i></div>
+                  <span class="font-semibold text-sm">LED Channel Letters</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">12"–24" height</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">$89</span> <span class="text-secondary text-xs">/ letter</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">3–4 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-store"></i></div>
+                  <span class="font-semibold text-sm">Window Sign</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">Up to 36" wide</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">$449</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">2–3 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-cube"></i></div>
+                  <span class="font-semibold text-sm">LED Logo Sign</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">Up to 30" wide</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">$599</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">3–4 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-sun"></i></div>
+                  <span class="font-semibold text-sm">Outdoor LED Sign</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">Up to 48" wide</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">$1,299</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">4–6 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+            <tr class="hover:bg-accent/5 transition-colors">
+              <td class="px-6 py-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent text-sm"><i class="fas fa-building"></i></div>
+                  <span class="font-semibold text-sm">Building Facade Signage</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-secondary text-sm">Custom</td>
+              <td class="px-6 py-5"><span class="font-bold text-accent">Custom</span></td>
+              <td class="px-6 py-5 text-secondary text-sm">6–10 weeks</td>
+              <td class="px-6 py-5 text-right"><a href="contact.html" class="text-accent text-xs font-semibold hover:underline">Quote →</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="md:hidden space-y-3">
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-sign-hanging"></i></div>
+            <div>
+              <p class="font-semibold text-sm">Custom Neon Sign</p>
+              <p class="text-secondary text-xs mt-0.5">Up to 24" wide · 2–3 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent">$299</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-font"></i></div>
+            <div>
+              <p class="font-semibold text-sm">LED Channel Letters</p>
+              <p class="text-secondary text-xs mt-0.5">12"–24" · 3–4 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent text-sm">$89<span class="text-secondary text-xs">/ea</span></p>
+        </div>
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-store"></i></div>
+            <div>
+              <p class="font-semibold text-sm">Window Sign</p>
+              <p class="text-secondary text-xs mt-0.5">Up to 36" · 2–3 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent">$449</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-cube"></i></div>
+            <div>
+              <p class="font-semibold text-sm">LED Logo Sign</p>
+              <p class="text-secondary text-xs mt-0.5">Up to 30" · 3–4 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent">$599</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-sun"></i></div>
+            <div>
+              <p class="font-semibold text-sm">Outdoor LED Sign</p>
+              <p class="text-secondary text-xs mt-0.5">Up to 48" · 4–6 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent">$1,299</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-body p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-building"></i></div>
+            <div>
+              <p class="font-semibold text-sm">Facade Signage</p>
+              <p class="text-secondary text-xs mt-0.5">Custom · 6–10 wks</p>
+            </div>
+          </div>
+          <p class="font-bold text-accent text-sm">Custom</p>
+        </div>
+      </div>
+
+      <p class="text-center text-xs text-secondary mt-8 max-w-2xl mx-auto">
+        <i class="fas fa-info-circle text-accent mr-1"></i>
+        All prices in USD. Installation, shipping, and permit fees quoted separately based on location.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 4 — PRICE FACTORS (icon + text, centered heading)
+       ============================================================ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+      <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">What Affects Price</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+        Five Factors That Shape Your Quote
+      </h2>
+      <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Understanding what drives cost helps you plan smarter. Here's exactly how we price custom signage.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+
+      <div class="rounded-3xl border border-border bg-card p-6 flex flex-col items-center text-center hover:border-accent/40 transition-colors">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+          <i class="fas fa-ruler-combined text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Size & Scale</h3>
+        <p class="text-secondary text-xs mt-2 leading-relaxed">Larger signs use more materials, LEDs and structural framing.</p>
+      </div>
+
+      <div class="rounded-3xl border border-border bg-card p-6 flex flex-col items-center text-center hover:border-accent/40 transition-colors">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+          <i class="fas fa-palette text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Color Complexity</h3>
+        <p class="text-secondary text-xs mt-2 leading-relaxed">Single-color costs less than RGB or multi-zone addressable LEDs.</p>
+      </div>
+
+      <div class="rounded-3xl border border-border bg-card p-6 flex flex-col items-center text-center hover:border-accent/40 transition-colors">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+          <i class="fas fa-mountain-sun text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Indoor vs Outdoor</h3>
+        <p class="text-secondary text-xs mt-2 leading-relaxed">Weather-rated IP65 builds need sealed housings and marine hardware.</p>
+      </div>
+
+      <div class="rounded-3xl border border-border bg-card p-6 flex flex-col items-center text-center hover:border-accent/40 transition-colors">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+          <i class="fas fa-screwdriver-wrench text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Installation</h3>
+        <p class="text-secondary text-xs mt-2 leading-relaxed">Height, wall material and permit needs affect install labor.</p>
+      </div>
+
+      <div class="rounded-3xl border border-border bg-card p-6 flex flex-col items-center text-center hover:border-accent/40 transition-colors">
+        <div class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+          <i class="fas fa-clock text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Timeline</h3>
+        <p class="text-secondary text-xs mt-2 leading-relaxed">Rush orders within 7 days include a small priority fee.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5 — ADD-ONS & OPTIONS (list layout, centered heading)
+       ============================================================ -->
+  <section class="bg-card border-y border-border py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Popular Add-Ons</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+          Customize Your Sign
+        </h2>
+        <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          Optional upgrades and services that can be added to any project to make your signage even more effective.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Dimmer Remote</h3>
+              <span class="text-accent font-bold text-sm shrink-0">+$49</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Wireless dimming for adjustable brightness through the day and night.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Smart App Control</h3>
+              <span class="text-accent font-bold text-sm shrink-0">+$149</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Schedule, dim, or change colors from your phone — perfect for retail.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-screwdriver-wrench"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Professional Install</h3>
+              <span class="text-accent font-bold text-sm shrink-0">From $199</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Certified installers handle mounting, wiring, and cleanup at your site.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-file-shield"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Extended Warranty</h3>
+              <span class="text-accent font-bold text-sm shrink-0">+$99</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Extend coverage to 5 years — includes parts, labor and free service calls.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-truck-fast"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Rush Production</h3>
+              <span class="text-accent font-bold text-sm shrink-0">+25%</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Ship within 7–10 days when you need signage for an event or launch.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-border bg-body p-6 flex items-start gap-4 hover:border-accent/40 transition-colors">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent shrink-0">
+            <i class="fas fa-brush"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Branded Backing</h3>
+              <span class="text-accent font-bold text-sm shrink-0">+$79</span>
+            </div>
+            <p class="text-secondary text-sm mt-2 leading-relaxed">Printed or colored acrylic backing to reinforce your visual identity.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 6 — FAQ + CTA (accordion + centered final band)
+       ============================================================ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+      <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Pricing FAQ</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+        Common Pricing Questions
+      </h2>
+      <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Everything you need to know about how we quote, invoice, and deliver your signage project.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+
+      <!-- FAQ column -->
+      <div class="lg:col-span-2 space-y-4">
+        <details class="group rounded-2xl border border-border bg-card overflow-hidden" open>
+          <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+            <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">How is my quote calculated?</h3>
+            <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+              <i class="fas fa-plus text-xs"></i>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+            We price based on size, materials, LED type, mounting complexity and installation. You'll receive a fixed-price quote with a line-by-line breakdown before we begin — no surprises.
+          </div>
+        </details>
+
+        <details class="group rounded-2xl border border-border bg-card overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+            <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Do you require a deposit?</h3>
+            <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+              <i class="fas fa-plus text-xs"></i>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+            Yes. We take a 50% deposit to begin production, with the remaining balance due on completion. Enterprise projects can be split into milestone payments.
+          </div>
+        </details>
+
+        <details class="group rounded-2xl border border-border bg-card overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+            <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Is installation included?</h3>
+            <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+              <i class="fas fa-plus text-xs"></i>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+            Installation is quoted separately based on your location and mounting needs, starting from $199 for standard indoor jobs. Our team handles everything from wiring to final cleanup.
+          </div>
+        </details>
+
+        <details class="group rounded-2xl border border-border bg-card overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+            <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Do you offer bulk discounts?</h3>
+            <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+              <i class="fas fa-plus text-xs"></i>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+            Absolutely. Orders of 3+ identical signs or multi-location rollouts receive 10–20% volume discounts. Contact us for a custom bulk quote.
+          </div>
+        </details>
+
+        <details class="group rounded-2xl border border-border bg-card overflow-hidden">
+          <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+            <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">What's your refund policy?</h3>
+            <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+              <i class="fas fa-plus text-xs"></i>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+            Because every sign is custom-made, deposits are non-refundable once production starts. However, if a sign arrives defective, we repair or replace it free under warranty.
+          </div>
+        </details>
+      </div>
+
+      <!-- CTA card -->
+      <div class="lg:col-span-1">
+        <div class="sticky top-32 rounded-3xl border border-accent/30 bg-accent/5 p-7 relative overflow-hidden">
+          <div class="absolute -top-8 -right-8 w-32 h-32 bg-accent/20 rounded-full blur-2xl"></div>
+          <div class="relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-accent text-white flex items-center justify-center mb-5">
+              <i class="fas fa-calculator text-lg"></i>
+            </div>
+            <h3 class="text-xl font-bold" style="font-weight: 500 !important;">Get your exact price</h3>
+            <p class="text-secondary text-sm mt-3 leading-relaxed">
+              Every project is unique. Share your requirements and we'll send a personalized quote within 1 business day.
+            </p>
+            <div class="mt-6 space-y-3">
+              <a href="contact.html" class="btn-primary w-full px-5 py-3 text-sm font-semibold inline-flex items-center justify-center gap-2">
+                <i class="fas fa-paper-plane"></i> Request a Quote
+              </a>
+              <a href="tel:8005557655" class="btn-outline w-full px-5 py-3 text-sm font-semibold inline-flex items-center justify-center gap-2">
+                <i class="fas fa-phone"></i> (800) 555-NEON
+              </a>
+            </div>
+            <div class="mt-6 pt-5 border-t border-accent/20 space-y-2 text-[11px] text-secondary">
+              <p><i class="fas fa-clock text-accent mr-1.5"></i> Response within 1 business day</p>
+              <p><i class="fas fa-file-invoice-dollar text-accent mr-1.5"></i> Detailed line-item breakdown</p>
+              <p><i class="fas fa-handshake text-accent mr-1.5"></i> No obligation, no pressure</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Final CTA band -->
+    <div class="relative mt-16 rounded-3xl border border-accent/30 bg-accent/5 p-8 md:p-12 text-center overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
+      <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent/15 rounded-full blur-3xl -ml-20 -mb-20"></div>
+      <div class="relative z-10">
+        <h3 class="text-2xl md:text-4xl font-bold max-w-2xl mx-auto" style="font-weight: 500 !important;">
+          Not sure what your sign should cost?
+        </h3>
+        <p class="text-secondary mt-4 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+          Send us a photo of your space and a few details — we'll recommend the right signage and send a free mockup with pricing.
+        </p>
+        <div class="flex flex-wrap gap-3 justify-center mt-8">
+          <a href="contact.html" class="btn-primary px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+            <i class="fas fa-camera"></i> Send Us a Photo
+          </a>
+          <a href="products.html" class="btn-outline px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+            <i class="fas fa-images"></i> Browse Products
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+    <!-- Footer -->
+        <footer class="pt-16 pb-8 border-t border-slate-800"
+        style="background: var(--footer-bg); color: var(--footer-text);">
+        <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-8">
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Custom Neon & LED Sign Maker for Businesses. Handcrafted, high-quality illuminated signs to make your brand shine.
+                </p>
+                <div class="mt-4 space-y-2 text-xs text-slate-300">
+                    <p class="flex items-center gap-2"><i class="fas fa-phone text-accent"></i> (800) 555-NEON</p>
+                    <p class="flex items-center gap-2"><i class="far fa-clock text-accent"></i> Mon-Fri, 9am-6pm</p>
+                </div>
+                <div class="flex gap-2.5 mt-5">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-facebook-f text-sm"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Custom Neon Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">LED Logos for Business</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Wedding & Event Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Outdoor Light Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Neon Art & Decor</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Request a Quote</a></li>
+                    <li><a href="design.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Design Guide</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Installation Guide</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Warranty & Returns</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Customer FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Our Portfolio</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">About NEOLUX</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Partner Program</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Blog</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                    Subscribe for design inspiration, exclusive offers, and the latest neon trends.
+                </p>
+                <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
+                    <input type="email" placeholder="Your email address" required class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit" class="bg-accent text-white px-3 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-5 mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>&copy; 2026 NEOLUX. Illuminate your Brand. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="contact.html" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Cookie Settings</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const html = document.documentElement;
+            // Theme toggles
+            const themeBtn = document.getElementById('theme-toggle'), mobileTheme = document.getElementById('mobile-theme-btn');
+            const applyTheme = (theme) => { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark')); document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light')); };
+            const initTheme = () => { const stored = localStorage.getItem('theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light'); };
+            const toggleTheme = () => { const cur = html.getAttribute('data-theme'); applyTheme(cur === 'light' ? 'dark' : 'light'); };
+            themeBtn?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            initTheme();
+            // RTL
+            const langBtn = document.getElementById('lang-icon'), mobileRtl = document.getElementById('mobile-rtl-btn');
+            const toggleRtl = () => { const isRtl = html.getAttribute('dir') === 'rtl'; html.setAttribute('dir', isRtl ? 'ltr' : 'rtl'); localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl'); };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            if (mobileRtl) mobileRtl.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr'; html.setAttribute('dir', savedDir);
+            // dropdowns desktop
+            document.querySelectorAll('.dropdown-wrapper').forEach(drop => {
+                const btn = drop.querySelector('.dropdown-toggle');
+                if (window.innerWidth >= 1280) {
+                    drop.addEventListener('mouseenter', () => drop.classList.add('open'));
+                    drop.addEventListener('mouseleave', () => drop.classList.remove('open'));
+                } else {
+                    btn?.addEventListener('click', (e) => { e.preventDefault(); drop.classList.toggle('open'); });
+                }
+            });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown-wrapper')) document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open')); });
+            // Mobile drawer
+            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('mobile-menu-open'), closeBtn = document.getElementById('drawer-close');
+            const openDrawer = () => { drawer.classList.remove('pointer-events-none'); panel.classList.remove('-translate-x-full'); backdrop.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
+            const closeDrawer = () => { panel.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100', 'pointer-events-auto'); setTimeout(() => drawer.classList.add('pointer-events-none'), 300); document.body.style.overflow = ''; };
+            openBtn?.addEventListener('click', openDrawer); closeBtn?.addEventListener('click', closeDrawer); backdrop?.addEventListener('click', closeDrawer);
+            document.getElementById('mobile-home-toggle')?.addEventListener('click', () => { document.getElementById('mobile-home-submenu')?.classList.toggle('hidden'); });
+            document.getElementById('mobile-dashboard-toggle')?.addEventListener('click', () => { document.getElementById('mobile-dashboard-submenu')?.classList.toggle('hidden'); });
+            // reveal animation
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.15 });
+            reveals.forEach(r => observer.observe(r));
+            // Add active nav based on hash
+            const navLinks = document.querySelectorAll('.nav-link, .dropdown-menu a, #mobile-drawer a');
+            navLinks.forEach(link => { link.addEventListener('click', function (e) { if (this.getAttribute('href')?.startsWith('#')) e.preventDefault(); window.location.hash = this.getAttribute('href')?.slice(1) || ''; }); });
+
+            // Dynamic Active Page Highlighter (Desktop & Mobile)
+            const currentPath = window.location.pathname;
+            let currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            if (!currentPage || currentPage === '/') currentPage = 'index.html';
+
+            // 1. Clean slate: clear all hardcoded active classes
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-toggle').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('text-accent', 'font-medium'));
+            
+            const mobileDrawer = document.getElementById('mobile-drawer');
+            if (mobileDrawer) {
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    link.classList.remove('active', 'text-accent', 'font-medium');
+                });
+                mobileDrawer.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('text-accent');
+                });
+                // Reset submenus to hidden
+                const dbSub = document.getElementById('mobile-dashboard-submenu');
+                if (dbSub) dbSub.classList.add('hidden');
+                const homeSub = document.getElementById('mobile-home-submenu');
+                if (homeSub) homeSub.classList.add('hidden');
+            }
+
+            // 2. Desktop Highlighting
+            let desktopMatched = false;
+            document.querySelectorAll('.dropdown-menu a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage) {
+                    link.classList.add('text-accent', 'font-medium');
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (wrapper) {
+                        const toggle = wrapper.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                    desktopMatched = true;
+                }
+            });
+
+            if (!desktopMatched) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (!wrapper) {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage) {
+                            link.classList.add('active');
+                        }
+                    }
+                });
+            }
+
+            // 3. Mobile Highlighting
+            if (mobileDrawer) {
+                let mobileMatched = false;
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPage) {
+                        link.classList.add('active');
+                        if (!link.classList.contains('rounded-full')) {
+                            link.classList.add('text-accent', 'font-medium');
+                        }
+                        
+                        // Handle parents/submenus
+                        const homeSubmenu = document.getElementById('mobile-home-submenu');
+                        const dashboardSubmenu = document.getElementById('mobile-dashboard-submenu');
+                        
+                        if (homeSubmenu && homeSubmenu.contains(link)) {
+                            const homeToggle = document.getElementById('mobile-home-toggle');
+                            if (homeToggle) homeToggle.classList.add('text-accent');
+                            homeSubmenu.classList.remove('hidden');
+                        } else if (dashboardSubmenu && dashboardSubmenu.contains(link)) {
+                            const dashboardToggle = document.getElementById('mobile-dashboard-toggle');
+                            if (dashboardToggle) dashboardToggle.classList.add('text-accent');
+                            dashboardSubmenu.classList.remove('hidden');
+                        }
+                        mobileMatched = true;
+                    }
+                });
+
+                // Fallback for index.html / home2.html / empty path
+                if (!mobileMatched && (currentPage === 'index.html' || currentPage === 'home2.html')) {
+                    const homeToggle = document.getElementById('mobile-home-toggle');
+                    if (homeToggle) homeToggle.classList.add('text-accent');
+                    const homeSubmenu = document.getElementById('mobile-home-submenu');
+                    if (homeSubmenu) homeSubmenu.classList.remove('hidden');
+                    
+                    const matchingLink = mobileDrawer.querySelector(`a[href="${currentPage}"]`);
+                    if (matchingLink) {
+                        matchingLink.classList.add('active', 'text-accent', 'font-medium');
+                    }
+                }
+            }
+        })();
+    </script>
+    <!-- home2.html redirect simulation: if path includes home2.html, just update theme but fully functional -->
+    <script>
+        // MOCK support for home2 version (just stays same design but content identical, but we respect current page path)
+        if (window.location.pathname.includes('home2.html')) { document.title = "NEOLUXSwift | Performance Pro Edition"; }
+    </script>
+    <!-- Floating Call Button -->
+    <a href="tel:8005557655" class="fixed bottom-6 right-6 bg-accent text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-[90] hover:bg-accent-dark transition-transform hover:scale-110 flex md:hidden" style="box-shadow: 0 4px 14px rgba(139, 92, 246, 0.5);">
+        <i class="fas fa-phone text-2xl"></i>
+    </a>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

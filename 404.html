@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/fav.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>404 — Page Not Found | NEOLUX</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #8B5CF6;
+            --accent-text: #7C3AED;
+            --accent-dark: #7C3AED;
+            --primary: #1E4A6B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #F3E8FF;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8B5CF6;
+            --accent-text: #A78BFA;
+            --accent-dark: #7C3AED;
+            --primary: #2563EB;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #2E1065;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-accent { color: var(--accent-text); }
+        .bg-accent { background-color: var(--accent); }
+        .bg-card { background-color: var(--card-bg); }
+        .text-secondary { color: var(--text-secondary); }
+        .border-border { border-color: var(--border-light); }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff !important;
+            border-radius: 9999px;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.4);
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px 0 rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--accent-text);
+            color: var(--accent-text) !important;
+            border-radius: 9999px;
+            background: transparent;
+            font-weight: 600 !important;
+            transition: 0.2s;
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+
+        button:focus { outline: none; box-shadow: none; }
+
+        /* decorative glow */
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        /* 404 number */
+        .error-code {
+            font-size: clamp(7rem, 22vw, 15rem);
+            line-height: 0.9;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+        .float-icon { animation: float 4s ease-in-out infinite; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: var(--accent);
+            animation: pulse-ring 2.5s ease-out infinite;
+            z-index: -1;
+        }
+
+        /* RTL */
+        html[dir="rtl"] body { direction: rtl; }
+
+        /* top-right controls */
+        .top-controls {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            display: flex;
+            gap: 0.5rem;
+        }
+        html[dir="rtl"] .top-controls {
+            right: auto;
+            left: 1rem;
+        }
+        .control-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 9999px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: 0.2s;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .control-btn:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Top-right controls: theme + RTL (no nav) -->
+    <div class="top-controls">
+        <button id="theme-toggle" class="control-btn" aria-label="Toggle theme">
+            <i class="fas fa-moon light-icon"></i>
+            <i class="fas fa-sun dark-icon hidden"></i>
+        </button>
+        <button id="lang-icon" class="control-btn" aria-label="Toggle direction">
+            <i class="fas fa-exchange-alt"></i>
+        </button>
+    </div>
+
+    <!-- 404 Main content -->
+    <main class="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+
+        <div class="glow-blob" style="width: 400px; height: 400px; background: var(--accent); top: -120px; right: -120px; opacity: 0.25;"></div>
+        <div class="glow-blob" style="width: 360px; height: 360px; background: var(--accent); bottom: -100px; left: -100px; opacity: 0.2;"></div>
+
+        <div class="relative z-10 w-full max-w-4xl mx-auto text-center py-16">
+
+            <!-- Logo -->
+            <a href="index.html" class="inline-flex items-center gap-2 text-2xl font-bold tracking-tight text-accent mb-8" style="font-weight: 700 !important;">
+                <i class="fa-solid fa-bolt"></i> NEOLUX
+            </a>
+
+            <!-- Floating lightbulb -->
+            <div class="flex justify-center mb-6">
+                <div class="relative w-20 h-20 rounded-3xl bg-accent/10 border border-accent/30 flex items-center justify-center pulse-ring float-icon">
+                    <i class="fas fa-lightbulb text-accent text-3xl"></i>
+                </div>
+            </div>
+
+            <!-- 404 code -->
+            <h1 class="error-code select-none">404</h1>
+
+            <!-- Heading -->
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mt-4" style="font-weight: 500 !important;">
+                This sign isn't <span class="text-accent">lit up</span> yet
+            </h2>
+
+            <!-- Subheading -->
+            <p class="text-secondary mt-5 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                The page you're looking for has been moved, renamed, or never existed. Let's get you back to something that glows.
+            </p>
+
+            <!-- CTA buttons -->
+            <div class="flex flex-wrap gap-3 justify-center mt-9">
+                <a href="index.html" class="btn-primary px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+                    <i class="fas fa-house"></i> Back to Home
+                </a>
+                <a href="contact.html" class="btn-outline px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+                    <i class="fas fa-headset"></i> Contact Support
+                </a>
+            </div>
+
+            <!-- Quick links -->
+            <div class="mt-14 pt-8 border-t border-border max-w-2xl mx-auto">
+                <p class="text-xs uppercase tracking-[0.25em] text-secondary font-bold mb-5">Popular Pages</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <a href="products.html" class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold hover:border-accent hover:text-accent transition-all inline-flex items-center gap-2">
+                        <i class="fas fa-sign-hanging text-accent text-[10px]"></i> Products
+                    </a>
+                    <a href="design.html" class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold hover:border-accent hover:text-accent transition-all inline-flex items-center gap-2">
+                        <i class="fas fa-pen-ruler text-accent text-[10px]"></i> Design Process
+                    </a>
+                    <a href="pricing.html" class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold hover:border-accent hover:text-accent transition-all inline-flex items-center gap-2">
+                        <i class="fas fa-tag text-accent text-[10px]"></i> Pricing
+                    </a>
+                    <a href="about.html" class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold hover:border-accent hover:text-accent transition-all inline-flex items-center gap-2">
+                        <i class="fas fa-circle-info text-accent text-[10px]"></i> About
+                    </a>
+                    <a href="contact.html" class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold hover:border-accent hover:text-accent transition-all inline-flex items-center gap-2">
+                        <i class="fas fa-envelope text-accent text-[10px]"></i> Contact
+                    </a>
+                </div>
+            </div>
+
+            <!-- Help strip -->
+            <div class="mt-10 inline-flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-secondary">
+                <span class="flex items-center gap-2"><i class="fas fa-phone text-accent"></i> (800) 555-NEON</span>
+                <span class="flex items-center gap-2"><i class="fas fa-envelope text-accent"></i> hello@neolux.co</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Minimal footer -->
+    <footer class="py-6 px-5 text-center">
+        <p class="text-xs text-secondary">
+            &copy; 2026 NEOLUX. Illuminate your Brand. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        (function () {
+            const html = document.documentElement;
+
+            // THEME
+            const themeBtn = document.getElementById('theme-toggle');
+            const applyTheme = (theme) => {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light'));
+            };
+            const initTheme = () => {
+                const stored = localStorage.getItem('theme');
+                const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light');
+            };
+            const toggleTheme = () => {
+                const cur = html.getAttribute('data-theme');
+                applyTheme(cur === 'light' ? 'dark' : 'light');
+            };
+            themeBtn?.addEventListener('click', toggleTheme);
+            initTheme();
+
+            // RTL
+            const langBtn = document.getElementById('lang-icon');
+            const toggleRtl = () => {
+                const isRtl = html.getAttribute('dir') === 'rtl';
+                html.setAttribute('dir', isRtl ? 'ltr' : 'rtl');
+                localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl');
+            };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr';
+            html.setAttribute('dir', savedDir);
+        })();
+    </script>
+</body>
+
+</html>

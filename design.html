@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/fav.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NEOLUX</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (performance/vintage-modern) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F7F9FC;
+            --text-primary: #0A1C2F;
+            --text-secondary: #2C3E50;
+            --accent: #8B5CF6;
+            --accent-text: #7C3AED;
+            --accent-dark: #7C3AED;
+            --primary: #1E4A6B;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #F3E8FF;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            --bg-body: #0B1120;
+            --text-primary: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --accent: #8B5CF6;
+            --accent-text: #A78BFA;
+            --accent-dark: #7C3AED;
+            --primary: #2563EB;
+            --card-bg: #1E293B;
+            --border-light: #334155;
+            --hover-bg: #2E1065;
+            --footer-bg: #020617;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        .text-accent {
+            color: var(--accent-text);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent-text);
+        }
+
+        .hover\:bg-accent\/10:hover {
+            background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-border {
+            border-color: var(--border-light);
+        }
+
+        /* Navbar + glassmorphic */
+        #main-header nav {
+            background: var(--card-bg);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        html[data-theme='dark'] #main-header nav {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.2s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown style */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            min-width: 190px;
+            padding: 0.4rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-wrapper.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        /* Tire comparison cards */
+        .tire-card {
+            transition: all 0.2s;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .tire-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary { white-space: nowrap;
+            background: var(--accent);
+            color: white;
+            border-radius: 9999px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-outline { white-space: nowrap;
+            border: 1.5px solid var(--accent-text);
+            color: var(--accent-text);
+            border-radius: 9999px;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .rating-star {
+            color: var(--rating-star);
+        }
+
+                .status-badge {
+            background: var(--accent);
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .vehicle-track {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button:focus,
+        .dropdown-toggle:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .dropdown-toggle {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            background: transparent;
+        }
+
+        @media (max-width: 1279px) {
+            .dropdown-menu {
+                position: static;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-wrapper.open .dropdown-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile Drawer Link Hover & Active Underlines */
+        #mobile-drawer nav a:not(.rounded-full) {
+            position: relative;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full) {
+            color: var(--accent-text) !important;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.2s ease;
+        }
+
+        #mobile-drawer nav a:not(.rounded-full):hover::after {
+            width: 100%;
+        }
+
+        /* RTL support for navigation spacing, underlines and menus */
+        html[dir="rtl"] #main-header .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            margin-right: 2rem !important;
+            margin-left: 0 !important;
+        }
+        html[dir="rtl"] .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] .dropdown-menu a:hover {
+            transform: translateX(-4px);
+        }
+        html[dir="rtl"] .hover\:translate-x-1:hover {
+            transform: translateX(-0.25rem) !important;
+        }
+        html[dir="rtl"] .nav-link::after {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] #mobile-drawer nav a:not(.rounded-full)::after {
+            left: auto;
+            right: 0;
+        }
+    </style>
+    <style id="typography-alignment">
+        /* Typography Alignment & Consistency Overrides */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 500 !important;
+        }
+        /* Keep paragraph weights 400-500 */
+        p:not(.font-medium), div.text-secondary {
+            font-weight: 400 !important;
+        }
+        /* Ensure proper text alignment inside cards */
+        .tire-card, .bg-card, .card {
+            text-align: left !important;
+        }
+        .text-center .tire-card, .text-center .bg-card {
+            text-align: left !important;
+        }
+        /* Reduce overly wide paragraphs inside containers for readability */
+        .container p, section > div > p.text-secondary {
+            max-width: 65ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tire-card p, .bg-card p, .card p, .text-left p {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            max-width: none !important;
+        }
+    </style>
+    <style id="cta-improvements">
+        /* Primary CTA Highlights */
+        .btn-primary { white-space: nowrap;
+            box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.4);
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+        html[data-theme='dark'] .btn-primary { white-space: nowrap;
+            box-shadow: 0 4px 12px 0 rgba(139, 92, 246, 0.3);
+            color: #ffffff !important; /* High contrast in dark mode */
+            font-weight: 600 !important;
+        }
+        
+        /* Hover Color Consistency & Contrast */
+        .btn-primary:hover {
+            background-color: var(--accent-dark) !important;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px 0 rgba(139, 92, 246, 0.5);
+        }
+        html[data-theme='dark'] .btn-primary:hover {
+            box-shadow: 0 6px 16px 0 rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-outline { white-space: nowrap;
+            color: var(--accent-text) !important;
+            border-color: var(--accent-text) !important;
+        }
+        .btn-outline:hover {
+            background-color: var(--accent) !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+        html[data-theme='dark'] .btn-outline:hover {
+            color: #ffffff !important; /* High contrast in dark mode */
+        }
+
+        /* Align CTA buttons consistently inside cards/grids */
+        .tire-card, .dashboard-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1.25rem;
+        }
+        .tire-card > div:last-child, .dashboard-card > div:last-child, .dashboard-card > button:last-child {
+            margin-top: auto;
+        }
+    </style>
+    <style id="image-improvements">
+        /* Prevent image distortion globally */
+        img:not([src*="fav.png"]):not(.object-contain) {
+            object-fit: cover !important;
+        }
+        
+        /* Ensure proper background overlays for readability (apply to containers if needed) */
+        .bg-overlay {
+            position: relative;
+        }
+        .bg-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bg-overlay > *:not(img) {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+    <style id="responsive-fixes">
+        /* Guarantee text wrapping on small screens */
+        body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            -ms-word-break: break-all;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 pt-3" id="main-header">
+        <nav
+            class="max-w-7xl mx-auto px-5 py-3 rounded-2xl flex items-center justify-between backdrop-blur-sm border border-border">
+            <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+            <!-- Desktop Center Nav -->
+            <div class="hidden xl:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium">
+                <div class="dropdown-wrapper">
+                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1">
+                        <span>Home</span><i
+                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a>
+                        <a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                                <a href="products.html" class="nav-link">Products</a>
+                <a href="design.html" class="nav-link">Design Process</a>
+                <a href="pricing.html" class="nav-link">Pricing Guide</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="hidden xl:flex items-center gap-4">
+                <a href="contact.html" class="btn-primary px-6 py-2 text-sm font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="lang-icon" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-exchange-alt"></i></button>
+            </div>
+            <div class="xl:hidden flex items-center gap-3">
+                <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="drawer-toggle" class="p-2 text-accent"><i class="fas fa-bars text-2xl"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-[100] pointer-events-none">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition pointer-events-none"></div>
+        <div id="drawer-panel" class="absolute top-0 left-0 w-80 h-full bg-card shadow-2xl transform -translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-border pb-4"><a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;; color: var(--accent-text) !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a><button id="drawer-close"><i class="fas fa-times text-xl"></i></button></div>
+            <nav class="flex flex-col gap-3 mt-6">
+                <div>
+                    <button id="mobile-home-toggle" class="flex w-full justify-between items-center py-2 font-medium text-accent">Home <i class="fas fa-chevron-down text-xs"></i></button>
+                    <div id="mobile-home-submenu" class="pl-4 flex flex-col gap-2 mt-1 border-l border-border">
+                        <a href="index.html" class="text-accent font-medium">Home 1</a><a href="home2.html">Home 2</a>
+                    </div>
+                </div>
+                <a href="products.html" class="py-2 font-medium">Products</a>
+                <a href="design.html" class="py-2 font-medium">Design Process</a>
+                <a href="pricing.html" class="py-2 font-medium">Pricing Guide</a>
+                <a href="about.html" class="py-2 font-medium">About</a>
+                <a href="contact.html" class="py-2 font-medium">Contact</a>
+                <div class="pt-4 border-t border-border flex gap-3 mt-4">                    <a href="contact.html" class="flex-1 text-center bg-accent rounded-full py-2 text-white font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
+                </div>
+                <div class="flex justify-around mt-6 pt-2"><button id="mobile-theme-btn" class="p-2"><i
+                            class="fas fa-moon"></i> Theme</button><button id="mobile-rtl-btn" class="p-2"><i
+                            class="fas fa-exchange-alt"></i> RTL</button></div>
+            </nav>
+        </div>
+    </div>
+
+  <main>
+
+  <!-- ============================================================
+       SECTION 1 — HERO (centered, with side accent stripes)
+       ============================================================ -->
+  <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 lg:py-24 overflow-hidden">
+    <!-- side accents -->
+    <div class="absolute top-10 left-0 w-24 h-24 bg-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-0 w-40 h-40 bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto">
+      <span class="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.25em] uppercase text-accent mb-6 px-4 py-2 rounded-full border border-accent/30 bg-accent/5">
+        <i class="fas fa-pen-ruler"></i> Design Process
+      </span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08]" style="font-weight: 500 !important;">
+        From Sketch to<br>
+        <span class="text-accent">Sign That Shines</span>
+      </h1>
+      <p class="text-secondary mt-6 text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed">
+        Every NEOLUX sign starts with a conversation and ends with an illuminated masterpiece. Here's exactly how we bring your vision to life.
+      </p>
+
+      <div class="flex flex-wrap gap-3 justify-center mt-10">
+        <a href="contact.html" class="btn-primary px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="fas fa-comments"></i> Start Your Design
+        </a>
+        <a href="#process" class="btn-outline px-7 py-3 text-sm font-semibold inline-flex items-center gap-2">
+          <i class="fas fa-arrow-down"></i> See the Process
+        </a>
+      </div>
+
+      <!-- step chips -->
+      <div class="flex flex-wrap justify-center gap-2 mt-12">
+        <span class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold">01 · Discovery</span>
+        <span class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold">02 · Concept</span>
+        <span class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold">03 · Refine</span>
+        <span class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold">04 · Build</span>
+        <span class="px-4 py-2 rounded-full border border-border bg-card text-xs font-semibold">05 · Install</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — DESIGN PHILOSOPHY (split image + principles)
+       ============================================================ -->
+  <section class="bg-card border-y border-border py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Our Philosophy</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+          Design That Serves Your Brand
+        </h2>
+        <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          We don't just build signs — we design light experiences that match your identity, space, and audience.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
+        <!-- image side -->
+        <div class="relative rounded-3xl overflow-hidden border border-border">
+          <img src="assets/c11.jpg"
+               alt="Designer sketching a neon sign concept"
+               class="w-full h-[320px] sm:h-[420px] lg:h-[520px] object-cover"
+               loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-white/70">Every design begins</p>
+              <p class="text-xl font-bold mt-1">On paper & in 3D</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
+              <i class="fas fa-drafting-compass text-accent text-lg"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- principles list -->
+        <div class="space-y-4">
+          <div class="rounded-2xl border border-border bg-body p-5 flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+              <i class="fas fa-bullseye"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Brand-First Thinking</h3>
+              <p class="text-secondary text-sm mt-1.5 leading-relaxed">Every curve, color and glow is measured against your brand guidelines.</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-border bg-body p-5 flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Visual Hierarchy</h3>
+              <p class="text-secondary text-sm mt-1.5 leading-relaxed">We balance light, negative space and typography for maximum readability.</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-border bg-body p-5 flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+              <i class="fas fa-cube"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Structural Integrity</h3>
+              <p class="text-secondary text-sm mt-1.5 leading-relaxed">Signage is engineered for wind load, weight, and mounting conditions.</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-border bg-body p-5 flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div>
+              <h3 class="font-semibold text-base" style="font-weight: 500 !important;">Sustainable Materials</h3>
+              <p class="text-secondary text-sm mt-1.5 leading-relaxed">Low-energy LEDs, recyclable acrylics and long-life components throughout.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3 — DESIGN WORKFLOW (5-step vertical alternating timeline)
+       ============================================================ -->
+  <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="text-center max-w-3xl mx-auto mb-12 md:mb-20">
+      <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">The NEOLUX Workflow</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+        Five Steps From Idea to Install
+      </h2>
+      <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Structured, transparent and collaborative — you're involved at every milestone.
+      </p>
+    </div>
+
+    <div class="relative">
+      <!-- center rail -->
+      <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2"></div>
+
+      <div class="space-y-8 lg:space-y-0">
+
+        <!-- Step 1 -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+          <div class="lg:text-right lg:pr-14 relative">
+            <div class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-accent ring-4 ring-[var(--bg-body)] z-10"></div>
+            <div class="rounded-3xl border border-border bg-card p-6 lg:p-7 lg:ml-auto max-w-md lg:max-w-none">
+              <span class="text-accent text-3xl font-bold opacity-30">01</span>
+              <h3 class="text-xl font-semibold mt-2" style="font-weight: 500 !important;">Discovery & Briefing</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">We learn your brand, site, budget and inspiration. You get a written brief confirming scope before we sketch.</p>
+            </div>
+          </div>
+          <div class="hidden lg:block"></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center lg:-mt-4">
+          <div class="hidden lg:block"></div>
+          <div class="lg:pl-14 relative">
+            <div class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent ring-4 ring-[var(--bg-body)] z-10"></div>
+            <div class="rounded-3xl border border-border bg-card p-6 lg:p-7 max-w-md lg:max-w-none">
+              <span class="text-accent text-3xl font-bold opacity-30">02</span>
+              <h3 class="text-xl font-semibold mt-2" style="font-weight: 500 !important;">Concept & Sketch</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">Hand sketches and rough digital drafts to explore style, lettering and layout directions.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center lg:-mt-4">
+          <div class="lg:text-right lg:pr-14 relative">
+            <div class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-accent ring-4 ring-[var(--bg-body)] z-10"></div>
+            <div class="rounded-3xl border border-border bg-card p-6 lg:p-7 lg:ml-auto max-w-md lg:max-w-none">
+              <span class="text-accent text-3xl font-bold opacity-30">03</span>
+              <h3 class="text-xl font-semibold mt-2" style="font-weight: 500 !important;">3D Mockup & Approval</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">You receive a full-color 3D render showing the sign in your actual space — day and night views included.</p>
+            </div>
+          </div>
+          <div class="hidden lg:block"></div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center lg:-mt-4">
+          <div class="hidden lg:block"></div>
+          <div class="lg:pl-14 relative">
+            <div class="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent ring-4 ring-[var(--bg-body)] z-10"></div>
+            <div class="rounded-3xl border border-border bg-card p-6 lg:p-7 max-w-md lg:max-w-none">
+              <span class="text-accent text-3xl font-bold opacity-30">04</span>
+              <h3 class="text-xl font-semibold mt-2" style="font-weight: 500 !important;">Engineering & Fabrication</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">Once approved, our team builds the sign with premium LEDs, acrylics and weather-rated components.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center lg:-mt-4">
+          <div class="lg:text-right lg:pr-14 relative">
+            <div class="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-accent ring-4 ring-[var(--bg-body)] z-10"></div>
+            <div class="rounded-3xl border border-border bg-card p-6 lg:p-7 lg:ml-auto max-w-md lg:max-w-none">
+              <span class="text-accent text-3xl font-bold opacity-30">05</span>
+              <h3 class="text-xl font-semibold mt-2" style="font-weight: 500 !important;">Install & Handover</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">Certified installers fit the sign, test every circuit, and walk you through care and warranty details.</p>
+            </div>
+          </div>
+          <div class="hidden lg:block"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 4 — DESIGN TOOLS & TECH (icon feature grid)
+       ============================================================ -->
+  <section class="bg-card border-y border-border py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Tools & Technology</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+          Built With Modern Design Tools
+        </h2>
+        <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          We combine old-school craftsmanship with modern design software, precision CNC routing and photometric simulation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-vector-square"></i>
+          </div>
+          <p class="text-xs font-semibold">Vector Design</p>
+          <p class="text-[10px] text-secondary mt-1">SVG · AI</p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-cube"></i>
+          </div>
+          <p class="text-xs font-semibold">3D Rendering</p>
+          <p class="text-[10px] text-secondary mt-1">Photoreal proofs</p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <p class="text-xs font-semibold">Photometric Sim</p>
+          <p class="text-[10px] text-secondary mt-1">Lux mapping</p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-robot"></i>
+          </div>
+          <p class="text-xs font-semibold">CNC Routing</p>
+          <p class="text-[10px] text-secondary mt-1">0.1mm precision</p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-palette"></i>
+          </div>
+          <p class="text-xs font-semibold">Pantone Match</p>
+          <p class="text-[10px] text-secondary mt-1">Color accuracy</p>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-body p-5 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-3">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <p class="text-xs font-semibold">Compliance</p>
+          <p class="text-[10px] text-secondary mt-1">UL · CE · IP65</p>
+        </div>
+
+      </div>
+
+      <!-- mockup preview strip -->
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="rounded-3xl overflow-hidden border border-border relative group">
+          <img src="assets/g1.jpg"
+               alt="Design mockup of LED sign"
+               class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+               loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+          <div class="absolute bottom-4 left-5 text-white">
+            <p class="text-[10px] uppercase tracking-widest text-accent font-bold">Step 01</p>
+            <p class="text-sm font-semibold">Sketch approval</p>
+          </div>
+        </div>
+        <div class="rounded-3xl overflow-hidden border border-border relative group">
+          <img src="assets/g2.jpg"
+               alt="3D render mockup"
+               class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+               loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+          <div class="absolute bottom-4 left-5 text-white">
+            <p class="text-[10px] uppercase tracking-widest text-accent font-bold">Step 02</p>
+            <p class="text-sm font-semibold">3D visualization</p>
+          </div>
+        </div>
+        <div class="rounded-3xl overflow-hidden border border-border relative group">
+          <img src="assets/g3.jpg"
+               alt="Final sign installation"
+               class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105"
+               loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+          <div class="absolute bottom-4 left-5 text-white">
+            <p class="text-[10px] uppercase tracking-widest text-accent font-bold">Step 03</p>
+            <p class="text-sm font-semibold">Final sign</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5 — DESIGN GUIDE / MISTAKES TO AVOID (two-column list)
+       ============================================================ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+      <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Design Guide</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+        Do's & Don'ts of Sign Design
+      </h2>
+      <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Practical tips we share with every client before we begin — these will make your signage more effective.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+      <!-- DO column -->
+      <div class="rounded-3xl border border-accent/30 bg-accent/5 p-6 md:p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl bg-accent text-white flex items-center justify-center">
+            <i class="fas fa-check"></i>
+          </div>
+          <h3 class="text-xl md:text-2xl font-bold" style="font-weight: 500 !important;">Do</h3>
+        </div>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-check text-accent text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Keep it legible from a distance</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Match letter height to viewing distance — 1" of letter height per 10 ft is a good baseline.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-check text-accent text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Use high-contrast colors</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Dark backgrounds with light letters — or vice versa — read best at night.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-check text-accent text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Stick to 2 fonts max</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">One for the brand name, one for supporting text. More feels cluttered.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-check text-accent text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Plan for night visibility</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Review the mockup in a dark scene before approving the final render.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-check text-accent text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Match signage to architecture</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Modern building? Go trimless. Vintage storefront? Classic channel letters work best.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- DON'T column -->
+      <div class="rounded-3xl border border-border bg-card p-6 md:p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl bg-secondary/15 text-secondary flex items-center justify-center">
+            <i class="fas fa-xmark"></i>
+          </div>
+          <h3 class="text-xl md:text-2xl font-bold" style="font-weight: 500 !important;">Don't</h3>
+        </div>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-xmark text-secondary/70 text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Overcrowd the sign</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Avoid cramming phone, address, tagline and services on one panel.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-xmark text-secondary/70 text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Mix too many colors</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">3+ neon colors on the same sign dilutes focus — pick a hero color.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-xmark text-secondary/70 text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Ignore local signage codes</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Some districts limit brightness or sign size — we check before designing.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-xmark text-secondary/70 text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Use thin scripts at small sizes</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Hairline fonts lose legibility — choose bolder for window pieces.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fas fa-circle-xmark text-secondary/70 text-sm mt-1"></i>
+            <div>
+              <p class="font-semibold text-sm">Skimp on installation planning</p>
+              <p class="text-secondary text-xs mt-1 leading-relaxed">Consider power access, mounting surface and viewing angles from the start.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 6 — FAQ + FINAL CTA (accordion + centered CTA band)
+       ============================================================ -->
+  <section class="bg-card border-t border-border py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+        <span class="text-accent text-xs font-bold tracking-[0.25em] uppercase">Design FAQ</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mt-3" style="font-weight: 500 !important;">
+          Questions Before We Start
+        </h2>
+        <p class="text-secondary mt-4 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          Common questions about our design and mockup process, answered clearly.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+
+        <!-- FAQ column -->
+        <div class="lg:col-span-2 space-y-4">
+          <details class="group rounded-2xl border border-border bg-body overflow-hidden" open>
+            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+              <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Do I need to provide a design file?</h3>
+              <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                <i class="fas fa-plus text-xs"></i>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+              No — a logo, rough sketch or even a written idea is enough for us to start. We'll convert it into a clean vector and full 3D mockup.
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-border bg-body overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+              <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">How many revisions are included?</h3>
+              <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                <i class="fas fa-plus text-xs"></i>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+              Every project includes two rounds of revisions at the concept stage and one final revision after the 3D mockup — all free of charge.
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-border bg-body overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+              <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Can I see the sign in my actual space?</h3>
+              <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                <i class="fas fa-plus text-xs"></i>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+              Yes. Send us a photo of your storefront or wall, and we'll composite a realistic mockup with the sign in place — day and night versions included.
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-border bg-body overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+              <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">What if I don't like the mockup?</h3>
+              <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                <i class="fas fa-plus text-xs"></i>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+              We don't move to fabrication until you're 100% happy. If the first concept isn't right, we'll explore new directions — no pressure and no extra fee.
+            </div>
+          </details>
+
+          <details class="group rounded-2xl border border-border bg-body overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+              <h3 class="text-base font-semibold text-left" style="font-weight: 500 !important;">Can you match my exact brand colors?</h3>
+              <span class="w-7 h-7 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                <i class="fas fa-plus text-xs"></i>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-secondary text-sm leading-relaxed border-t border-border pt-4">
+              Absolutely. Share your brand guide or a Pantone / HEX reference, and we'll use calibrated LED modules and acrylics to match as closely as physically possible.
+            </div>
+          </details>
+        </div>
+
+        <!-- CTA card -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-32 rounded-3xl border border-accent/30 bg-accent/5 p-7 relative overflow-hidden">
+            <div class="absolute -top-8 -right-8 w-32 h-32 bg-accent/20 rounded-full blur-2xl"></div>
+            <div class="relative z-10">
+              <div class="w-12 h-12 rounded-2xl bg-accent text-white flex items-center justify-center mb-5">
+                <i class="fas fa-pencil-ruler text-lg"></i>
+              </div>
+              <h3 class="text-xl font-bold" style="font-weight: 500 !important;">Ready to design your sign?</h3>
+              <p class="text-secondary text-sm mt-3 leading-relaxed">
+                Send us a photo of your space and a few details — we'll come back with a free mockup and quote.
+              </p>
+              <div class="mt-6 space-y-3">
+                <a href="contact.html" class="btn-primary w-full px-5 py-3 text-sm font-semibold inline-flex items-center justify-center gap-2">
+                  <i class="fas fa-paper-plane"></i> Start a Project
+                </a>
+                <a href="pricing.html" class="btn-outline w-full px-5 py-3 text-sm font-semibold inline-flex items-center justify-center gap-2">
+                  <i class="fas fa-tag"></i> View Pricing
+                </a>
+              </div>
+              <div class="mt-6 pt-5 border-t border-accent/20">
+                <p class="text-[11px] text-secondary leading-tight">
+                  <i class="fas fa-clock text-accent mr-1"></i> Average design turnaround: 3–5 business days
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+    <!-- Footer -->
+        <footer class="pt-16 pb-8 border-t border-slate-800"
+        style="background: var(--footer-bg); color: var(--footer-text);">
+        <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-8">
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Custom Neon & LED Sign Maker for Businesses. Handcrafted, high-quality illuminated signs to make your brand shine.
+                </p>
+                <div class="mt-4 space-y-2 text-xs text-slate-300">
+                    <p class="flex items-center gap-2"><i class="fas fa-phone text-accent"></i> (800) 555-NEON</p>
+                    <p class="flex items-center gap-2"><i class="far fa-clock text-accent"></i> Mon-Fri, 9am-6pm</p>
+                </div>
+                <div class="flex gap-2.5 mt-5">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-facebook-f text-sm"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Custom Neon Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">LED Logos for Business</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Wedding & Event Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Outdoor Light Signs</a></li>
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Neon Art & Decor</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Request a Quote</a></li>
+                    <li><a href="design.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Design Guide</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Installation Guide</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Warranty & Returns</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Customer FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Our Portfolio</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">About NEOLUX</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Partner Program</a></li>
+                    <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Blog</a></li>
+                    <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                    Subscribe for design inspiration, exclusive offers, and the latest neon trends.
+                </p>
+                <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
+                    <input type="email" placeholder="Your email address" required class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit" class="bg-accent text-white px-3 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-5 mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>&copy; 2026 NEOLUX. Illuminate your Brand. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="contact.html" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Cookie Settings</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const html = document.documentElement;
+            // Theme toggles
+            const themeBtn = document.getElementById('theme-toggle'), mobileTheme = document.getElementById('mobile-theme-btn');
+            const applyTheme = (theme) => { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark')); document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light')); };
+            const initTheme = () => { const stored = localStorage.getItem('theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light'); };
+            const toggleTheme = () => { const cur = html.getAttribute('data-theme'); applyTheme(cur === 'light' ? 'dark' : 'light'); };
+            themeBtn?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            initTheme();
+            // RTL
+            const langBtn = document.getElementById('lang-icon'), mobileRtl = document.getElementById('mobile-rtl-btn');
+            const toggleRtl = () => { const isRtl = html.getAttribute('dir') === 'rtl'; html.setAttribute('dir', isRtl ? 'ltr' : 'rtl'); localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl'); };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            if (mobileRtl) mobileRtl.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr'; html.setAttribute('dir', savedDir);
+            // dropdowns desktop
+            document.querySelectorAll('.dropdown-wrapper').forEach(drop => {
+                const btn = drop.querySelector('.dropdown-toggle');
+                if (window.innerWidth >= 1280) {
+                    drop.addEventListener('mouseenter', () => drop.classList.add('open'));
+                    drop.addEventListener('mouseleave', () => drop.classList.remove('open'));
+                } else {
+                    btn?.addEventListener('click', (e) => { e.preventDefault(); drop.classList.toggle('open'); });
+                }
+            });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown-wrapper')) document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open')); });
+            // Mobile drawer
+            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('mobile-menu-open'), closeBtn = document.getElementById('drawer-close');
+            const openDrawer = () => { drawer.classList.remove('pointer-events-none'); panel.classList.remove('-translate-x-full'); backdrop.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
+            const closeDrawer = () => { panel.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100', 'pointer-events-auto'); setTimeout(() => drawer.classList.add('pointer-events-none'), 300); document.body.style.overflow = ''; };
+            openBtn?.addEventListener('click', openDrawer); closeBtn?.addEventListener('click', closeDrawer); backdrop?.addEventListener('click', closeDrawer);
+            document.getElementById('mobile-home-toggle')?.addEventListener('click', () => { document.getElementById('mobile-home-submenu')?.classList.toggle('hidden'); });
+            document.getElementById('mobile-dashboard-toggle')?.addEventListener('click', () => { document.getElementById('mobile-dashboard-submenu')?.classList.toggle('hidden'); });
+            // reveal animation
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.15 });
+            reveals.forEach(r => observer.observe(r));
+            // Add active nav based on hash
+            const navLinks = document.querySelectorAll('.nav-link, .dropdown-menu a, #mobile-drawer a');
+            navLinks.forEach(link => { link.addEventListener('click', function (e) { if (this.getAttribute('href')?.startsWith('#')) e.preventDefault(); window.location.hash = this.getAttribute('href')?.slice(1) || ''; }); });
+
+            // Dynamic Active Page Highlighter (Desktop & Mobile)
+            const currentPath = window.location.pathname;
+            let currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+            if (!currentPage || currentPage === '/') currentPage = 'index.html';
+
+            // 1. Clean slate: clear all hardcoded active classes
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-toggle').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dropdown-menu a').forEach(link => link.classList.remove('text-accent', 'font-medium'));
+            
+            const mobileDrawer = document.getElementById('mobile-drawer');
+            if (mobileDrawer) {
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    link.classList.remove('active', 'text-accent', 'font-medium');
+                });
+                mobileDrawer.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('text-accent');
+                });
+                // Reset submenus to hidden
+                const dbSub = document.getElementById('mobile-dashboard-submenu');
+                if (dbSub) dbSub.classList.add('hidden');
+                const homeSub = document.getElementById('mobile-home-submenu');
+                if (homeSub) homeSub.classList.add('hidden');
+            }
+
+            // 2. Desktop Highlighting
+            let desktopMatched = false;
+            document.querySelectorAll('.dropdown-menu a').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage) {
+                    link.classList.add('text-accent', 'font-medium');
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (wrapper) {
+                        const toggle = wrapper.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                    desktopMatched = true;
+                }
+            });
+
+            if (!desktopMatched) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const wrapper = link.closest('.dropdown-wrapper');
+                    if (!wrapper) {
+                        const href = link.getAttribute('href');
+                        if (href === currentPage) {
+                            link.classList.add('active');
+                        }
+                    }
+                });
+            }
+
+            // 3. Mobile Highlighting
+            if (mobileDrawer) {
+                let mobileMatched = false;
+                mobileDrawer.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === currentPage) {
+                        link.classList.add('active');
+                        if (!link.classList.contains('rounded-full')) {
+                            link.classList.add('text-accent', 'font-medium');
+                        }
+                        
+                        // Handle parents/submenus
+                        const homeSubmenu = document.getElementById('mobile-home-submenu');
+                        const dashboardSubmenu = document.getElementById('mobile-dashboard-submenu');
+                        
+                        if (homeSubmenu && homeSubmenu.contains(link)) {
+                            const homeToggle = document.getElementById('mobile-home-toggle');
+                            if (homeToggle) homeToggle.classList.add('text-accent');
+                            homeSubmenu.classList.remove('hidden');
+                        } else if (dashboardSubmenu && dashboardSubmenu.contains(link)) {
+                            const dashboardToggle = document.getElementById('mobile-dashboard-toggle');
+                            if (dashboardToggle) dashboardToggle.classList.add('text-accent');
+                            dashboardSubmenu.classList.remove('hidden');
+                        }
+                        mobileMatched = true;
+                    }
+                });
+
+                // Fallback for index.html / home2.html / empty path
+                if (!mobileMatched && (currentPage === 'index.html' || currentPage === 'home2.html')) {
+                    const homeToggle = document.getElementById('mobile-home-toggle');
+                    if (homeToggle) homeToggle.classList.add('text-accent');
+                    const homeSubmenu = document.getElementById('mobile-home-submenu');
+                    if (homeSubmenu) homeSubmenu.classList.remove('hidden');
+                    
+                    const matchingLink = mobileDrawer.querySelector(`a[href="${currentPage}"]`);
+                    if (matchingLink) {
+                        matchingLink.classList.add('active', 'text-accent', 'font-medium');
+                    }
+                }
+            }
+        })();
+    </script>
+    <!-- home2.html redirect simulation: if path includes home2.html, just update theme but fully functional -->
+    <script>
+        // MOCK support for home2 version (just stays same design but content identical, but we respect current page path)
+        if (window.location.pathname.includes('home2.html')) { document.title = "NEOLUXSwift | Performance Pro Edition"; }
+    </script>
+    <!-- Floating Call Button -->
+    <a href="tel:8005557655" class="fixed bottom-6 right-6 bg-accent text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-[90] hover:bg-accent-dark transition-transform hover:scale-110 flex md:hidden" style="box-shadow: 0 4px 14px rgba(139, 92, 246, 0.5);">
+        <i class="fas fa-phone text-2xl"></i>
+    </a>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
