@@ -449,11 +449,11 @@
             </div>
             <div class="hidden xl:flex items-center gap-4">
                 <a href="contact.html" class="btn-primary px-6 py-2 text-sm font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
-                <button id="theme-toggle" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
-                <button id="lang-icon" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-exchange-alt"></i></button>
+                
+                
             </div>
             <div class="xl:hidden flex items-center gap-3">
-                <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-accent/10"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                
                 <button id="drawer-toggle" class="p-2 text-accent"><i class="fas fa-bars text-2xl"></i></button>
             </div>
         </nav>
@@ -790,8 +790,7 @@
         <footer class="pt-16 pb-8 border-t border-slate-800"
         style="background: var(--footer-bg); color: var(--footer-text);">
         <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-8">
-            <div class="col-span-2 md:col-span-3 lg:col-span-1">
-                <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+            <div class="col-span-2 md:col-span-6 lg:col-span-1">`n                  <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
                 <p class="text-xs text-slate-400 mt-3 leading-relaxed">
                     Custom Neon & LED Sign Maker for Businesses. Handcrafted, high-quality illuminated signs to make your brand shine.
                 </p>
@@ -806,8 +805,7 @@
                     <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white"><i class="fab fa-linkedin-in text-sm"></i></a>
                 </div>
             </div>
-            <div>
-                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
+            <div class="col-span-1 md:col-span-2 lg:col-span-1"> <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Services</h4>
                 <ul class="text-xs space-y-2.5 text-slate-400">
                     <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Custom Neon Signs</a></li>
                     <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">LED Logos for Business</a></li>
@@ -816,8 +814,7 @@
                     <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Neon Art & Decor</a></li>
                 </ul>
             </div>
-            <div>
-                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
+            <div class="col-span-1 md:col-span-2 lg:col-span-1"> <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Support</h4>
                 <ul class="text-xs space-y-2.5 text-slate-400">
                     <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Request a Quote</a></li>
                     <li><a href="design.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Design Guide</a></li>
@@ -826,8 +823,7 @@
                     <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Customer FAQ</a></li>
                 </ul>
             </div>
-            <div>
-                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
+            <div class="col-span-1 md:col-span-2 lg:col-span-1"> <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Company</h4>
                 <ul class="text-xs space-y-2.5 text-slate-400">
                     <li><a href="products.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Our Portfolio</a></li>
                     <li><a href="about.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">About NEOLUX</a></li>
@@ -836,8 +832,7 @@
                     <li><a href="contact.html" class="hover:text-accent hover:translate-x-1 inline-block transition-all duration-200">Contact Us</a></li>
                 </ul>
             </div>
-            <div class="col-span-2 md:col-span-3 lg:col-span-1">
-                <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
+            <div class="col-span-2 md:col-span-6 lg:col-span-1"> <h4 class="font-medium text-sm tracking-wider uppercase text-white mb-4">Stay Connected</h4>
                 <p class="text-xs text-slate-400 mb-3 leading-relaxed">
                     Subscribe for design inspiration, exclusive offers, and the latest neon trends.
                 </p>
@@ -885,7 +880,7 @@
             });
             document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown-wrapper')) document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open')); });
             // Mobile drawer
-            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('mobile-menu-open'), closeBtn = document.getElementById('drawer-close');
+            const drawer = document.getElementById('mobile-drawer'), backdrop = document.getElementById('drawer-backdrop'), panel = document.getElementById('drawer-panel'), openBtn = document.getElementById('drawer-toggle'), closeBtn = document.getElementById('drawer-close');
             const openDrawer = () => { drawer.classList.remove('pointer-events-none'); panel.classList.remove('-translate-x-full'); backdrop.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
             const closeDrawer = () => { panel.classList.add('-translate-x-full'); backdrop.classList.remove('opacity-100', 'pointer-events-auto'); setTimeout(() => drawer.classList.add('pointer-events-none'), 300); document.body.style.overflow = ''; };
             openBtn?.addEventListener('click', openDrawer); closeBtn?.addEventListener('click', closeDrawer); backdrop?.addEventListener('click', closeDrawer);
@@ -1006,6 +1001,10 @@
 </body>
 
 </html>
+
+
+
+
 
 
 
