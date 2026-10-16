@@ -124,7 +124,7 @@
 
         .dropdown-menu {
             position: absolute;
-            top: 110%;
+            top: 100%; margin-top: 0.5rem;
             left: 0;
             background: var(--card-bg);
             border: 1px solid var(--border-light);
@@ -138,6 +138,10 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             z-index: 100;
             overflow: hidden;
+        }
+
+        .dropdown-wrapper.open .dropdown-toggle i {
+            transform: rotate(180deg);
         }
 
         .dropdown-wrapper.open .dropdown-menu {
@@ -432,9 +436,9 @@
             <!-- Desktop Center Nav -->
             <div class="hidden xl:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium">
                 <div class="dropdown-wrapper">
-                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1">
-                        <span>Home</span><i
-                            class="fas fa-chevron-down text-[10px] leading-none inline-block translate-y-[2.5px]"></i>
+                    <button class="nav-link active dropdown-toggle inline-flex items-center gap-1.5 py-1">
+                        <span>Home</span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-75 transition-transform duration-200"></i>
                     </button>
                     <div class="dropdown-menu">
                         <a href="index.html" class="text-accent font-medium">Home 1</a>
@@ -447,13 +451,13 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="contact.html" class="nav-link">Contact</a>
             </div>
-            <div class="hidden xl:flex items-center gap-4">
-                <a href="contact.html" class="btn-primary px-6 py-2 text-sm font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
-                
-                
+            <div class="hidden xl:flex items-center gap-3">
+                <a href="contact.html" class="btn-primary px-5 py-2 text-sm font-medium"><i class="fas fa-headset mr-1"></i> Let's Talk</a>
+                <button id="theme-toggle" class="w-9 h-9 rounded-full border border-border flex items-center justify-center text-text-primary hover:text-accent hover:border-accent transition-colors" aria-label="Toggle theme"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
+                <button id="lang-icon" class="w-9 h-9 rounded-full border border-border flex items-center justify-center text-text-primary hover:text-accent hover:border-accent transition-colors" aria-label="Toggle direction"><i class="fas fa-exchange-alt"></i></button>
             </div>
-            <div class="xl:hidden flex items-center gap-3">
-                
+            <div class="xl:hidden flex items-center gap-2">
+                <button id="theme-toggle-mobile" class="w-9 h-9 rounded-full border border-border flex items-center justify-center text-text-primary hover:text-accent transition-colors" aria-label="Toggle theme"><i class="fas fa-moon light-icon"></i><i class="fas fa-sun dark-icon hidden"></i></button>
                 <button id="drawer-toggle" class="p-2 text-accent"><i class="fas fa-bars text-2xl"></i></button>
             </div>
         </nav>
@@ -940,11 +944,11 @@
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
 
       <!-- Outdoor -->
-      <div id="outdoor" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col">
-        <div class="relative h-52 overflow-hidden">
+      <div id="outdoor" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col shadow-sm">
+        <div class="relative h-56 overflow-hidden">
           <img src="assets/f1.jpg"
                alt="Outdoor LED signage"
                class="w-full h-full object-cover"
@@ -952,25 +956,29 @@
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
           <span class="absolute top-4 left-4 status-badge">Category 04</span>
         </div>
-        <div class="p-6 flex flex-col flex-1">
-          <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">Outdoor LED Signs</h3>
-          <p class="text-secondary text-sm mt-3 leading-relaxed flex-1">
-            Weather-rated, IP65-certified signage for building facades, pylon signs, and roadside visibility.
-          </p>
-          <ul class="mt-4 space-y-2 text-sm text-secondary">
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> UV-resistant acrylics</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Marine-grade hardware</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Wind-load engineering</li>
-          </ul>
-          <a href="contact.html" class="btn-outline mt-auto w-full px-5 py-2.5 text-xs font-semibold inline-flex items-center justify-center gap-2">
-            <i class="fas fa-paper-plane"></i> Enquire
-          </a>
+        <div class="p-7 flex flex-col flex-1 justify-between">
+          <div>
+            <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">Outdoor LED Signs</h3>
+            <p class="text-secondary text-sm mt-3 leading-relaxed">
+              Weather-rated, IP65-certified signage for building facades, pylon signs, and roadside visibility.
+            </p>
+            <ul class="mt-5 space-y-2.5 text-sm text-secondary">
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> UV-resistant acrylics</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Marine-grade hardware</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Wind-load engineering</li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-2">
+            <a href="contact.html" class="btn-outline w-full py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+              <i class="fas fa-paper-plane"></i> Enquire
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Logo -->
-      <div id="logo" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col">
-        <div class="relative h-52 overflow-hidden">
+      <div id="logo" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col shadow-sm">
+        <div class="relative h-56 overflow-hidden">
           <img src="assets/f2.jpg"
                alt="LED logo sign"
                class="w-full h-full object-cover"
@@ -978,25 +986,29 @@
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
           <span class="absolute top-4 left-4 status-badge">Category 05</span>
         </div>
-        <div class="p-6 flex flex-col flex-1">
-          <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">LED Logo Signs</h3>
-          <p class="text-secondary text-sm mt-3 leading-relaxed flex-1">
-            Precision edge-lit logos for reception walls, conference rooms, and corporate lobbies.
-          </p>
-          <ul class="mt-4 space-y-2 text-sm text-secondary">
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Pantone color matching</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Edge-lit or back-lit</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Wall-mount or standoff</li>
-          </ul>
-          <a href="contact.html" class="btn-outline mt-auto w-full px-5 py-2.5 text-xs font-semibold inline-flex items-center justify-center gap-2">
-            <i class="fas fa-paper-plane"></i> Enquire
-          </a>
+        <div class="p-7 flex flex-col flex-1 justify-between">
+          <div>
+            <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">LED Logo Signs</h3>
+            <p class="text-secondary text-sm mt-3 leading-relaxed">
+              Precision edge-lit logos for reception walls, conference rooms, and corporate lobbies.
+            </p>
+            <ul class="mt-5 space-y-2.5 text-sm text-secondary">
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Pantone color matching</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Edge-lit or back-lit</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Wall-mount or standoff</li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-2">
+            <a href="contact.html" class="btn-outline w-full py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+              <i class="fas fa-paper-plane"></i> Enquire
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Bespoke -->
-      <div id="custom" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col">
-        <div class="relative h-52 overflow-hidden">
+      <div id="custom" class="tire-card rounded-3xl border border-border bg-card overflow-hidden flex flex-col shadow-sm">
+        <div class="relative h-56 overflow-hidden">
           <img src="assets/f3.jpg"
                alt="Bespoke neon project"
                class="w-full h-full object-cover"
@@ -1004,19 +1016,23 @@
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
           <span class="absolute top-4 left-4 status-badge">Category 06</span>
         </div>
-        <div class="p-6 flex flex-col flex-1">
-          <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">Bespoke Projects</h3>
-          <p class="text-secondary text-sm mt-3 leading-relaxed flex-1">
-            Multi-location rollouts, custom art pieces, and full-service project management.
-          </p>
-          <ul class="mt-4 space-y-2 text-sm text-secondary">
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Dedicated project manager</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Nationwide installation</li>
-            <li class="flex items-center gap-2"><i class="fas fa-check text-accent text-xs"></i> Permit assistance</li>
-          </ul>
-          <a href="contact.html" class="btn-primary mt-auto w-full px-5 py-2.5 text-xs font-semibold inline-flex items-center justify-center gap-2">
-            <i class="fas fa-headset"></i> Talk to Us
-          </a>
+        <div class="p-7 flex flex-col flex-1 justify-between">
+          <div>
+            <h3 class="text-xl font-semibold" style="font-weight: 500 !important;">Bespoke Projects</h3>
+            <p class="text-secondary text-sm mt-3 leading-relaxed">
+              Multi-location rollouts, custom art pieces, and full-service project management.
+            </p>
+            <ul class="mt-5 space-y-2.5 text-sm text-secondary">
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Dedicated project manager</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Nationwide installation</li>
+              <li class="flex items-center gap-2.5"><i class="fas fa-check text-accent text-xs"></i> Permit assistance</li>
+            </ul>
+          </div>
+          <div class="mt-8 pt-2">
+            <a href="contact.html" class="btn-primary w-full py-3 text-xs font-semibold inline-flex items-center justify-center gap-2">
+              <i class="fas fa-headset"></i> Talk to Us
+            </a>
+          </div>
         </div>
       </div>
 
@@ -1133,7 +1149,8 @@
         <footer class="pt-16 pb-8 border-t border-slate-800"
         style="background: var(--footer-bg); color: var(--footer-text);">
         <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-8">
-            <div class="col-span-2 md:col-span-6 lg:col-span-1">`n                  <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
+            <div class="col-span-2 md:col-span-6 lg:col-span-1">
+                  <a href="index.html" class="text-2xl font-bold tracking-tight text-accent flex items-center gap-2" style="font-weight: 700 !important;"><i class="fa-solid fa-bolt"></i> NEOLUX</a>
                 <p class="text-xs text-slate-400 mt-3 leading-relaxed">
                     Custom Neon & LED Sign Maker for Businesses. Handcrafted, high-quality illuminated signs to make your brand shine.
                 </p>
@@ -1199,11 +1216,11 @@
         (function () {
             const html = document.documentElement;
             // Theme toggles
-            const themeBtn = document.getElementById('theme-toggle'), mobileTheme = document.getElementById('mobile-theme-btn');
+            const themeBtn = document.getElementById('theme-toggle'), themeBtnMobile = document.getElementById('theme-toggle-mobile'), mobileTheme = document.getElementById('mobile-theme-btn');
             const applyTheme = (theme) => { html.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark')); document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light')); };
             const initTheme = () => { const stored = localStorage.getItem('theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light'); };
             const toggleTheme = () => { const cur = html.getAttribute('data-theme'); applyTheme(cur === 'light' ? 'dark' : 'light'); };
-            themeBtn?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            themeBtn?.addEventListener('click', toggleTheme); themeBtnMobile?.addEventListener('click', toggleTheme); if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
             initTheme();
             // RTL
             const langBtn = document.getElementById('lang-icon'), mobileRtl = document.getElementById('mobile-rtl-btn');
